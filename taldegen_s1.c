@@ -135,7 +135,7 @@ void main (int argc, char *argv[])
     nor[taldea][tkop[taldea]] = i;
     tkop[taldea] ++; 
   }
-
+  exit(-1);
   // trinkotasuna talde bakoitzean: elementuen arteko distantzien batezbestekoa (OSATZEKO)
   trinkotasuna (tkop, elem, nor, trinko);
 

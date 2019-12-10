@@ -25,7 +25,7 @@ float dis_gen (float *zent, float *elem)
 {
    float dis = 0.0; 
    for (int i = 0; i < 20; ++i)
-      dis += pow(zent[i]-elem[i], 2.0);
+      dis +=(float)pow((double)(zent[i]-elem[i]), 2.0);
    return sqrt(dis);
    // EGITEKO
    // kalkulatu bi elementuen arteko distantzia (euklidearra)
@@ -47,8 +47,9 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
 {
    int* poplag = popul;
    int zentmin;
-   float dis, dismin = FLT_MAX;
+   float dis, dismin;
    for (int ele = 0; ele < elekop; ele++) {
+      dismin = FLT_MAX;
       for (int zen = 0; zen < TALDEKOP; zen++) {
          dis = dis_gen(elem[ele], zent[zen]);
          if (dis < dismin) {
@@ -82,12 +83,41 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
 {
    // EGITEKO
    // Kalkulatu taldeen trinkotasuna: kideen arteko distantzien batazbestekoa
+  /* float batura_dis[TALDEKOP];
    int* tkoplag = tkop;
+   float* trinkolag = trinko;
+   float* elementu;
    for (int i = 0; i < TALDEKOP; i++) {
-      for (int j = i+1; j < *tkoplag; j++) {
-         
-      }
-      tkoplag++;
+	for (int j=0; j < tkoplag; j++) {
+		for (int k=0; k < EMAX; k++){
+		elementu=null;
+			if (elem[k]==nor[i][j] && elementu==null){
+				elementu=elem[k];
+			}else{
+				batura_dis[i]=batura_dis[i]+dis_gen(elementu,elem[k]);
+			}
+		}
+	}
+	*trinkolag = batura_dis[i]/(*tkoplag);
+        trinkolag++;
+	tkoplag++; 
+   }*/
+   int kont;
+   float batura_dis;
+   int* kidekop = tkop;
+   float* trinkolag = trinko;
+   for (int i = 0; i < TALDEKOP; i++){
+        kont = 0;
+	batura_dis = 0.0;
+	for (int j = 0; j < *kidekop; j++){
+		for (int k=j+1; k < *kidekop; k++){
+			batura_dis += dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
+			kont+=1;
+		}
+	}
+	*trinkolag = batura_dis/kont;
+	trinkolag++;
+	kidekop++;
    }
 }
 
