@@ -115,10 +115,16 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
 			kont+=1;
 		}
 	}
-	*trinkolag = batura_dis/kont;
+	if(!kont){
+		*trinkolag = 0;
+	}else{
+		*trinkolag = batura_dis/kont;
+	}
 	trinkolag++;
 	kidekop++;
    }
 }
+
+
 
 
