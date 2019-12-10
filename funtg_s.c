@@ -45,22 +45,22 @@ float dis_gen (float *zent, float *elem)
 
 void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], int *popul)
 {
-   int* poplag = popul;
    int zentmin;
    float dis, dismin;
-   for (int ele = 0; ele < elekop; ele++) {
+   for (int ele = 0; ele < elekop; ele++)
+   {
       dismin = FLT_MAX;
-      for (int zen = 0; zen < TALDEKOP; zen++) {
+      for (int zen = 0; zen < TALDEKOP; zen++)
+      {
          dis = dis_gen(elem[ele], zent[zen]);
-         if (dis < dismin) {
+         if (dis < dismin)
+         {
             dismin = dis;
             zentmin = zen;
          }
          //printf("%d\t", zen);
       }
-      *poplag = zentmin;
-      ++poplag;
-      //printf("%f\t%d\t %d ", dismin, zentmin, ele);
+      popul[ele] = zentmin;
    }
    //printf("\t-- Bukaera --\n");
    // EGITEKO
@@ -106,22 +106,17 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
    float batura_dis;
    int* kidekop = tkop;
    float* trinkolag = trinko;
-   for (int i = 0; i < TALDEKOP; i++){
-        kont = 0;
-	batura_dis = 0.0;
-	for (int j = 0; j < *kidekop; j++){
-		for (int k=j+1; k < *kidekop; k++){
+   for (int i = 0; i < TALDEKOP; i++)
+   {
+      kont = 0;
+	  batura_dis = 0.0;
+	  for (int j = 0; j < tkop[i]; j++)
+         for (int k = j+1; k < tkop[i]; k++)
+         {
 			batura_dis += dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
-			kont+=1;
-		}
-	}
-	if(!kont){
-		*trinkolag = 0;
-	}else{
-		*trinkolag = batura_dis/kont;
-	}
-	trinkolag++;
-	kidekop++;
+			kont++;
+         }
+      trinko[i] = kont ? batura_dis / kont : 0; 
    }
 }
 
