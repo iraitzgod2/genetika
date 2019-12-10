@@ -126,3 +126,5 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
 }
 
 
+
+
