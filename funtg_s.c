@@ -21,15 +21,14 @@
        Irteera:  distantzia (float)
 ***************************************************************************************************/
 
+// EGITEKO
+// kalkulatu bi elementuen arteko distantzia (euklidearra)
 float dis_gen (float *zent, float *elem)
 {
    float dis = 0.0; 
    for (int i = 0; i < 20; ++i)
       dis +=(float)pow((double)(zent[i]-elem[i]), 2.0);
    return sqrt(dis);
-   // EGITEKO
-   // kalkulatu bi elementuen arteko distantzia (euklidearra)
-
 }
 
 
@@ -43,9 +42,10 @@ float dis_gen (float *zent, float *elem)
    Irteera:  popul  EMAX tamainako bektorea, erreferentziaz, osagai bat elementuko, dagokion taldea
 ***************************************************************************************************/
 
+// EGITEKO
+// popul: elementu bakoitzaren zentroide hurbilena, haren "taldea"
 void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], int *popul)
 {
-   int* poplag = popul;
    int zentmin;
    float dis, dismin;
    for (int ele = 0; ele < elekop; ele++) {
@@ -56,16 +56,9 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
             dismin = dis;
             zentmin = zen;
          }
-         //printf("%d\t", zen);
       }
-      *poplag = zentmin;
-      ++poplag;
-      //printf("%f\t%d\t %d ", dismin, zentmin, ele);
+      popul[ele] = zentmin;
    }
-   //printf("\t-- Bukaera --\n");
-   // EGITEKO
-   // popul: elementu bakoitzaren zentroide hurbilena, haren "taldea"
-
 }
 
 
@@ -79,50 +72,27 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
    Irteera:  trinko trinkotasuna (TALDEKOP tamainako bektorea, erreferentziaz) 
 ***************************************************************************************************/
 
+// EGITEKO
+// Kalkulatu taldeen trinkotasuna: kideen arteko distantzien batazbestekoa
 void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *trinko)
-{
-   // EGITEKO
-   // Kalkulatu taldeen trinkotasuna: kideen arteko distantzien batazbestekoa
-  /* float batura_dis[TALDEKOP];
-   int* tkoplag = tkop;
-   float* trinkolag = trinko;
-   float* elementu;
-   for (int i = 0; i < TALDEKOP; i++) {
-	for (int j=0; j < tkoplag; j++) {
-		for (int k=0; k < EMAX; k++){
-		elementu=null;
-			if (elem[k]==nor[i][j] && elementu==null){
-				elementu=elem[k];
-			}else{
-				batura_dis[i]=batura_dis[i]+dis_gen(elementu,elem[k]);
+{ 
+	int kont;
+	double batura_dis;
+	for (int i = 0; i < TALDEKOP; i++){
+        	kont = 0;
+		batura_dis = 0.0;
+		for (int j = 0; j < tkop[i]; j++){
+			for (int k=j+1; k < tkop[i]; k++){
+				batura_dis += (double)dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
+				kont+=1;
 			}
 		}
-	}
-	*trinkolag = batura_dis[i]/(*tkoplag);
-        trinkolag++;
-	tkoplag++; 
-   }*/
-   int kont;
-   float batura_dis;
-   int* kidekop = tkop;
-   float* trinkolag = trinko;
-   for (int i = 0; i < TALDEKOP; i++){
-        kont = 0;
-	batura_dis = 0.0;
-	for (int j = 0; j < *kidekop; j++){
-		for (int k=j+1; k < *kidekop; k++){
-			batura_dis += dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
-			kont+=1;
+		if(tkop[i]<2){
+			trinko[i] = 0.0;
+		}else{
+			trinko[i] = (float)(batura_dis/kont);
 		}
-	}
-	if(!kont){
-		*trinkolag = 0;
-	}else{
-		*trinkolag = batura_dis/kont;
-	}
-	trinkolag++;
-	kidekop++;
-   }
+   	}
 }
 
 
