@@ -79,8 +79,6 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
 // Kalkulatu taldeen trinkotasuna: kideen arteko distantzien batazbestekoa
 void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *trinko)
 {
-   // EGITEKO
-   // Kalkulatu taldeen trinkotasuna: kideen arteko distantzien batazbestekoa
    int kont;
    double batura_dis;
    for (int i = 0; i < TALDEKOP; i++)
