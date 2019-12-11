@@ -48,11 +48,14 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
 {
    int zentmin;
    float dis, dismin;
-   for (int ele = 0; ele < elekop; ele++) {
+   for (int ele = 0; ele < elekop; ele++)
+   {
       dismin = FLT_MAX;
-      for (int zen = 0; zen < TALDEKOP; zen++) {
+      for (int zen = 0; zen < TALDEKOP; zen++)
+      {
          dis = dis_gen(elem[ele], zent[zen]);
-         if (dis < dismin) {
+         if (dis < dismin)
+         {
             dismin = dis;
             zentmin = zen;
          }
@@ -75,24 +78,23 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
 // EGITEKO
 // Kalkulatu taldeen trinkotasuna: kideen arteko distantzien batazbestekoa
 void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *trinko)
-{ 
-	int kont;
-	double batura_dis;
-	for (int i = 0; i < TALDEKOP; i++){
-        	kont = 0;
-		batura_dis = 0.0;
-		for (int j = 0; j < tkop[i]; j++){
-			for (int k=j+1; k < tkop[i]; k++){
-				batura_dis += (double)dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
-				kont+=1;
-			}
-		}
-		if(tkop[i]<2){
-			trinko[i] = 0.0;
-		}else{
-			trinko[i] = (float)(batura_dis/kont);
-		}
-   	}
+{
+   // EGITEKO
+   // Kalkulatu taldeen trinkotasuna: kideen arteko distantzien batazbestekoa
+   int kont;
+   double batura_dis;
+   for (int i = 0; i < TALDEKOP; i++)
+   {
+      kont = 0;
+      batura_dis = 0.0;
+      for (int j = 0; j < tkop[i]; j++)
+         for (int k = j+1; k < tkop[i]; k++)
+         {
+            batura_dis += (double) dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
+            kont++;
+         }
+      trinko[i] = tkop[i] < 2 ? 0.0 : (float) (batura_dis / kont); 
+   }
 }
 
 
