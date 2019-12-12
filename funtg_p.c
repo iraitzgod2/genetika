@@ -26,17 +26,19 @@
 float dis_gen (float *zent, float *elem)
 {
    float dis = 0.0; 
-   int tid, nth, hasi, buka, i;
-   #pragma omp parallel shared(zent, elem, dis) private(tid, nth, i, hasi, buka)
-   {
-      tid = omp_get_thread_num();
-      nth = omp_get_num_threads();
+   //int tid, nth, hasi, buka;
+   int i;
+  // #pragma omp parallel shared(zent, elem, dis) private(tid, nth, i, hasi, buka)
+  // {
+     // tid = omp_get_thread_num();
+     // nth = omp_get_num_threads();
 
-      hasi = tid * ALDAKOP / nth;
-      buka = (tid+1) * ALDAKOP / nth;
-      for (i = hasi; i < buka; ++i)
+      //hasi = tid * ALDAKOP / nth;
+      //buka = (tid+1) * ALDAKOP / nth;
+      #pragma omp parallel for private(i) shared(zent,elem) reduction(+:dis) schedule(runtime)
+      for (i = 0; i < ALDAKOP; ++i)
          dis +=(float)pow((double)(zent[i]-elem[i]), 2.0);
-   }
+   //}
    return sqrt(dis);
 }
 
