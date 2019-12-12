@@ -70,7 +70,6 @@ void main (int argc, char *argv[])
   // ===================================
 
   srand (147);
-  //#pragma omp parallel for private(i,j) shared(zent)
   for (i=0; i<TALDEKOP; i++) 
   for (j=0; j<ALDAKOP; j++) 
     zent[i][j] = (rand() % 10000) / 100.0; 
@@ -81,11 +80,9 @@ void main (int argc, char *argv[])
   // =========================================================
 
   iterkop = 0; bukatu = 0;
-  //#pragma omp parallel{
   while ((bukatu == 0) && (iterkop < ITMAX))
   {
-    // kalkulatu talde gertuena (OSATZEKO)
-    //#pragma omp master 
+    // kalkulatu talde gertuena (OSATZEKO) 
     talde_gertuena (elekop, elem, zent, popul);
 
 
@@ -102,7 +99,7 @@ void main (int argc, char *argv[])
         baturak[popul[i]][j] += elem[i][j];
       baturak[popul[i]][ALDAKOP] ++;
     }
-  
+
 
     // kalkulatu zentroide berriak eta erabaki bukatu den edo jarraitu behar den, DELTAren arabera
     bukatu = 1;
@@ -123,7 +120,7 @@ void main (int argc, char *argv[])
 
     iterkop ++;
   } // while
-  //} // parallel
+
 
   
   // 2. fasea: kontatu populazio bakoitzaren elementuen kopurua eta kalkulatu talden "trinkotasuna"
@@ -138,7 +135,7 @@ void main (int argc, char *argv[])
     nor[taldea][tkop[taldea]] = i;
     tkop[taldea] ++; 
   }
-  exit(-1);
+
   // trinkotasuna talde bakoitzean: elementuen arteko distantzien batezbestekoa (OSATZEKO)
   trinkotasuna (tkop, elem, nor, trinko);
 
