@@ -42,7 +42,7 @@ void main (int argc, char *argv[])
   }
 
 
-  printf ("\n >> Exekuzioa seriean\n");
+  printf ("\n >> Exekuzioa paraleloan\n");
   clock_gettime (CLOCK_REALTIME, &t1);
 
   
@@ -68,17 +68,15 @@ void main (int argc, char *argv[])
 
   // aukeratu lehen zentroideak, ausaz
   // ===================================
-
+ 
   srand (147);
   for (i=0; i<TALDEKOP; i++) 
-  for (j=0; j<ALDAKOP; j++) 
-    zent[i][j] = (rand() % 10000) / 100.0; 
-
-
+  for (j=0; j<ALDAKOP; j++)
+    zent[i][j] = (rand() % 10000) / 100.0;
 
   // 1. fasea: kalkulatu zentroideak eta sailkatu elementuak
   // =========================================================
-
+  
   iterkop = 0; bukatu = 0;
   while ((bukatu == 0) && (iterkop < ITMAX))
   {
@@ -89,10 +87,11 @@ void main (int argc, char *argv[])
     // kalkulatu talde bakoitzeko zentroide berriak
     // dimentsio bakoitzaren batazbestea
     // baturak: 100 aldagaien balioak akumulatzeko; azkena kopurua da
+    //#pragma omp parallel for private(i,j) shared(baturak) schedule(runtime)
     for (i=0; i<TALDEKOP; i++)
     for (j=0; j<ALDAKOP+1; j++) 
       baturak[i][j] = 0.0;
-
+   
     for (i=0; i<elekop; i++)
     {
       for (j=0; j<ALDAKOP; j++) 
@@ -129,6 +128,8 @@ void main (int argc, char *argv[])
   for (i=0; i<TALDEKOP; i++) tkop[i] = 0;
 
   // elementuen kopurua eta sailkapena
+  
+  //Hari kopurua gehienez 8
   for (i=0; i<elekop; i++) 
   {
     taldea = popul[i];
@@ -137,13 +138,13 @@ void main (int argc, char *argv[])
   }
 
   // trinkotasuna talde bakoitzean: elementuen arteko distantzien batezbestekoa (OSATZEKO)
-  trinkotasuna (tkop, elem, nor, trinko);
 
+  trinkotasuna (tkop, elem, nor, trinko);
 
   // idatzi emaitza batzuk fitxategi batean
   // ========================================
   
-  f2 = fopen ("dbh_irt", "w");
+  f2 = fopen ("dbh_irt_par", "w");
   if (f2 == NULL) {
     printf ("Errorea %s fitxategia irekitzean\n", argv[1]);
     fclose (f2);
@@ -180,6 +181,6 @@ void main (int argc, char *argv[])
   }
 
   printf ("\n >> Iterazio kopurua: %d", iterkop);
-  printf ("\n >> Tex (serie): %1.3f s\n\n", texe);
+  printf ("\n >> Tex (paralelo): %1.3f s\n\n", texe);
 }
 
