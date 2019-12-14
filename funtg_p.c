@@ -87,7 +87,7 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
    {
       kont = 0;
       batura_dis = 0.0;
-      #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont)
+      #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont)   
       for (j = 0; j < tkop[i]; j++)
          for (k = j+1; k < tkop[i]; k++)
          {

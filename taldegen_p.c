@@ -87,11 +87,11 @@ void main (int argc, char *argv[])
     // kalkulatu talde bakoitzeko zentroide berriak
     // dimentsio bakoitzaren batazbestea
     // baturak: 100 aldagaien balioak akumulatzeko; azkena kopurua da
-    //#pragma omp parallel for private(i,j) shared(baturak) schedule(runtime)
+    //#pragma omp parallel for private(i,j) shared(baturak)
     for (i=0; i<TALDEKOP; i++)
     for (j=0; j<ALDAKOP+1; j++) 
       baturak[i][j] = 0.0;
-   
+    //#pragma omp parallel for private(i,j) reduction(+:baturak)   
     for (i=0; i<elekop; i++)
     {
       for (j=0; j<ALDAKOP; j++) 
@@ -128,7 +128,7 @@ void main (int argc, char *argv[])
 
   // elementuen kopurua eta sailkapena
   
-  //Hari kopurua gehienez 8
+  //Hari kopurua gehienez 8  
   for (i=0; i<elekop; i++) 
   {
     taldea = popul[i];
