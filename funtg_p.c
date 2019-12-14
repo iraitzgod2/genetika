@@ -1,7 +1,7 @@
 /*
     KA - OpenmP
-    funtg_s.c
-    talde_gen.c programan erabiltzen diren errutinak
+    funtg_p.c
+    taldegen_p.c programan erabiltzen diren errutinak
 
     OSATZEKO
 **************************************************************************************************/
@@ -87,13 +87,12 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
    {
       kont = 0;
       batura_dis = 0.0;
-      //#pragma omp parallel for private(i,j) shared(kont,elem,nor,tkop) reduction(+:batura_dis)
+      #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont)
       for (j = 0; j < tkop[i]; j++)
          for (k = j+1; k < tkop[i]; k++)
          {
-	    //#pragma omp critical
             batura_dis += (double) dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
-            kont++;
+	    kont++;
          }      
       trinko[i] = tkop[i] < 2 ? 0.0 : (float) (batura_dis / kont); 
    }

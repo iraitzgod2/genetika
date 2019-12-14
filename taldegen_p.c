@@ -105,7 +105,7 @@ void main (int argc, char *argv[])
     for (i=0; i<TALDEKOP; i++) 
     {
       if (baturak[i][ALDAKOP] > 0) // taldea ez dago hutsik
-      {
+      { 
         for (j=0; j<ALDAKOP; j++) zentberri[i][j] = baturak[i][j] / baturak[i][ALDAKOP];    
       
         // erabaki bukatu behar den
@@ -116,7 +116,6 @@ void main (int argc, char *argv[])
         for (j=0; j<ALDAKOP; j++) zent[i][j] = zentberri[i][j];    
       }
     }
-
     iterkop ++;
   } // while
 
