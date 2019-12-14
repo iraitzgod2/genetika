@@ -48,14 +48,14 @@ float dis_gen (float *zent, float *elem)
 // popul: elementu bakoitzaren zentroide hurbilena, haren "taldea"
 void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], int *popul)
 {
-   int zentmin,ele,zen;
+   int ele,zen;
    float dis, dismin[elekop];
    #pragma omp parallel for private(ele)   
    for (ele = 0; ele < elekop; ele++)
       dismin[ele]=FLT_MAX;
    for (zen = 0; zen < TALDEKOP; zen++)
-   { 
-      #pragma omp parallel for private(ele,dis)  
+   {
+      #pragma omp parallel for private(ele,dis)
       for (ele = 0; ele < elekop; ele++)
       {
          dis = dis_gen(elem[ele], zent[zen]);

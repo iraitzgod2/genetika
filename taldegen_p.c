@@ -87,11 +87,11 @@ void main (int argc, char *argv[])
     // kalkulatu talde bakoitzeko zentroide berriak
     // dimentsio bakoitzaren batazbestea
     // baturak: 100 aldagaien balioak akumulatzeko; azkena kopurua da
-    //#pragma omp parallel for private(i,j) shared(baturak)
+    #pragma omp parallel for private(i,j) shared(baturak)
     for (i=0; i<TALDEKOP; i++)
     for (j=0; j<ALDAKOP+1; j++) 
       baturak[i][j] = 0.0;
-    //#pragma omp parallel for private(i,j) reduction(+:baturak)   
+    #pragma omp parallel for private(i,j) reduction(+:baturak)   
     for (i=0; i<elekop; i++)
     {
       for (j=0; j<ALDAKOP; j++) 
@@ -106,6 +106,7 @@ void main (int argc, char *argv[])
     {
       if (baturak[i][ALDAKOP] > 0) // taldea ez dago hutsik
       { 
+        //#pragma omp for private(j)
         for (j=0; j<ALDAKOP; j++) zentberri[i][j] = baturak[i][j] / baturak[i][ALDAKOP];    
       
         // erabaki bukatu behar den
@@ -113,6 +114,7 @@ void main (int argc, char *argv[])
         if (diszent > DELTA) bukatu = 0;	// dimentsio batean aldaketa dago; segi smulazioarekin
 
         // kopiatu zentroide berriak
+        //#pragma omp for private(j)
         for (j=0; j<ALDAKOP; j++) zent[i][j] = zentberri[i][j];    
       }
     }
@@ -123,12 +125,12 @@ void main (int argc, char *argv[])
   
   // 2. fasea: kontatu populazio bakoitzaren elementuen kopurua eta kalkulatu talden "trinkotasuna"
   // ===============================================================================================
-
+  #pragma omp parallel for private(i)
   for (i=0; i<TALDEKOP; i++) tkop[i] = 0;
 
   // elementuen kopurua eta sailkapena
   
-  //Hari kopurua gehienez 8  
+  //Hari kopurua gehienez 8   
   for (i=0; i<elekop; i++) 
   {
     taldea = popul[i];
