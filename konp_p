@@ -1,2 +1,2 @@
 gcc -O2 -fopenmp -o taldegen_p taldegen_p.c funtg_p.c -lm
-./taldegen_p ~/templates/genetika/dbh     
+./taldegen_p ~/templates/genetika/dbh      
