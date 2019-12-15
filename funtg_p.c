@@ -28,8 +28,9 @@ float dis_gen (float *zent, float *elem)
 {
    float dis = 0.0; 
    int i;
+   //#pragma omp parallel for
    for (i = 0; i < ALDAKOP; ++i)
-      dis +=(float)pow((double)(zent[i]-elem[i]), 2.0);
+      dis +=(float) pow((double)zent[i]-elem[i], 2.0);
    return sqrt(dis);
 }
 
@@ -50,7 +51,7 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
 {
    int ele,zen;
    float dis, dismin[elekop];
-   #pragma omp parallel for private(ele)   
+   #pragma omp parallel for private(ele)  
    for (ele = 0; ele < elekop; ele++)
       dismin[ele]=FLT_MAX;
    for (zen = 0; zen < TALDEKOP; zen++)
