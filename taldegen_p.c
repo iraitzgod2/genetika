@@ -33,7 +33,7 @@ void main (int argc, char *argv[])
 
   FILE    *f1, *f2;
   struct timespec  t1, t2,t3,t4,t5,t6;
-  double  texe,texetrinko,texetaldegertu;
+  double  texe,texe1fasea,texe2fasea;
   int ktald, kelem, kalda, nth = omp_get_num_threads();
 
   if ((argc < 2)  || (argc > 3)) {
@@ -76,18 +76,16 @@ void main (int argc, char *argv[])
 
   // 1. fasea: kalkulatu zentroideak eta sailkatu elementuak
   // =========================================================
-  
+  printf ("\n >> Exekuzioa 1.fasean\n");
+  clock_gettime (CLOCK_REALTIME, &t5);
   iterkop = 0; bukatu = 0;
   ktald = TALDEKOP/nth;
   kalda = ALDAKOP/nth;
   kelem = elekop/nth;
-  printf ("\n >> Exekuzioa talde gertuena\n");
   while ((bukatu == 0) && (iterkop < ITMAX))
   {
-    // kalkulatu talde gertuena (OSATZEKO)
-    clock_gettime (CLOCK_REALTIME, &t5); 
+    // kalkulatu talde gertuena (OSATZEKO) 
     talde_gertuena (elekop, elem, zent, popul);
-    clock_gettime (CLOCK_REALTIME, &t6);
 
 
     // kalkulatu talde bakoitzeko zentroide berriak
@@ -113,7 +111,7 @@ void main (int argc, char *argv[])
     {
       if (baturak[i][ALDAKOP] > 0) // taldea ez dago hutsik
       { 
-        #pragma omp parallel for private(j) schedule(static,kalda)
+        //#pragma omp parallel for private(j) schedule(static,kalda)
         for (j=0; j<ALDAKOP; j++) zentberri[i][j] = baturak[i][j] / baturak[i][ALDAKOP];    
       
         // erabaki bukatu behar den
@@ -127,13 +125,16 @@ void main (int argc, char *argv[])
     }
     iterkop ++;
   } // while
-  texetaldegertu = (t6.tv_sec-t5.tv_sec) + (t6.tv_nsec-t5.tv_nsec)/(double)1e9;
-  printf ("\n >> Tex (talde gertuena): %1.3f s\n\n", texetaldegertu);
+  clock_gettime (CLOCK_REALTIME, &t6);
+  texe1fasea = (t6.tv_sec-t5.tv_sec) + (t6.tv_nsec-t5.tv_nsec)/(double)1e9;
+  printf ("\n >> Tex (1.fasea): %1.3f s\n\n", texe1fasea);
 
 
   
   // 2. fasea: kontatu populazio bakoitzaren elementuen kopurua eta kalkulatu talden "trinkotasuna"
   // ===============================================================================================
+  printf ("\n >> Exekuzioa 2.fasean\n");
+  clock_gettime (CLOCK_REALTIME, &t3);
   #pragma omp parallel for private(i) schedule(static,ktald)
   for (i=0; i<TALDEKOP; i++) tkop[i] = 0;
 
@@ -149,12 +150,11 @@ void main (int argc, char *argv[])
   }
 
   // trinkotasuna talde bakoitzean: elementuen arteko distantzien batezbestekoa (OSATZEKO)
-  printf ("\n >> Exekuzioa trinkotasuna\n");
-  clock_gettime (CLOCK_REALTIME, &t3);
   trinkotasuna (tkop, elem, nor, trinko);
+
   clock_gettime (CLOCK_REALTIME, &t4);
-  texetrinko = (t4.tv_sec-t3.tv_sec) + (t4.tv_nsec-t3.tv_nsec)/(double)1e9;
-  printf ("\n >> Tex (trinkotasuna): %1.3f s\n\n", texetrinko);
+  texe2fasea = (t4.tv_sec-t3.tv_sec) + (t4.tv_nsec-t3.tv_nsec)/(double)1e9;
+  printf ("\n >> Tex (2.fasean): %1.3f s\n\n", texe2fasea);
   // idatzi emaitza batzuk fitxategi batean
   // ========================================
   
