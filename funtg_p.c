@@ -51,7 +51,7 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
 {
    int zentmin,ele,zen;
    float dis, dismin[elekop];
-   /*
+   /* 
    int ktald, kelem, kalda, nth = omp_get_num_threads();
    ktald = TALDEKOP/nth;
    kalda = ALDAKOP/nth;
@@ -62,7 +62,7 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
      dismin[ele]=FLT_MAX;
    */
    for (zen = 0; zen < TALDEKOP; zen++)
-      #pragma omp parallel for private(ele,dis) schedule(static)
+      #pragma omp parallel for private(ele,dis) schedule(static) 
       for (ele = 0; ele < elekop; ele++)
       {
          dis = dis_gen(elem[ele], zent[zen]);
@@ -91,21 +91,22 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
 {
    int kont,i,j,k;
    double batura_dis;
+   long a,b;
    for (i = 0; i < TALDEKOP; i++)
    {
       kont = 0;
       batura_dis = 0.0;
       #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont) schedule(dynamic)  
       for (j = 0; j < tkop[i]; j++)
+      {
          for (k = j+1; k < tkop[i]; k++)
          {
             batura_dis += (double) dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
-	    kont++;
-         }      
+         }
+         kont += j;
+      }
       trinko[i] = tkop[i] < 2 ? 0.0 : (float) (batura_dis / kont); 
    }
 }
-
-
 
 

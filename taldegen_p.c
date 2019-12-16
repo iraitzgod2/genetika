@@ -111,7 +111,7 @@ void main (int argc, char *argv[])
     {
       if (baturak[i][ALDAKOP] > 0) // taldea ez dago hutsik
       { 
-        //#pragma omp parallel for private(j) schedule(static,kalda)
+        #pragma omp parallel for private(j) schedule(static,kalda)
         for (j=0; j<ALDAKOP; j++) zentberri[i][j] = baturak[i][j] / baturak[i][ALDAKOP];    
       
         // erabaki bukatu behar den
