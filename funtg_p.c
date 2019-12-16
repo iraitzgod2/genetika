@@ -28,7 +28,7 @@ float dis_gen (float *zent, float *elem)
 {
    float dis = 0.0; 
    int i;
-   //#pragma omp parallel for
+   //#pragma omp for schedule(dynamic)
    for (i = 0; i < ALDAKOP; ++i)
       dis +=(float) pow((double)zent[i]-elem[i], 2.0);
    return sqrt(dis);
@@ -51,26 +51,27 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
 {
    int ele,zen;
    float dis, dismin[elekop];
+   /*
    int ktald, kelem, kalda, nth = omp_get_num_threads();
    ktald = TALDEKOP/nth;
-  kalda = ALDAKOP/nth;
-  kelem = elekop/nth;
-   #pragma omp parallel for private(ele) schedule(static)
+   kalda = ALDAKOP/nth;
+   kelem = elekop/nth;
+   */
+   /*#pragma omp parallel for private(ele) schedule(static,kelem)
    for (ele = 0; ele < elekop; ele++)
       dismin[ele]=FLT_MAX;
+   */
    for (zen = 0; zen < TALDEKOP; zen++)
-   {
-      #pragma omp parallel for private(ele,dis) schedule(static) 
+      #pragma omp parallel for private(ele,dis) schedule(static)
       for (ele = 0; ele < elekop; ele++)
       {
          dis = dis_gen(elem[ele], zent[zen]);
-         if (dis < dismin[ele])
+         if (zen == 0 || dis < dismin[ele])
          {
             dismin[ele] = dis;
             popul[ele] = zen;
          }
       }
-   }
 }
 
 
@@ -94,7 +95,7 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
    {
       kont = 0;
       batura_dis = 0.0;
-      #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont) schedule(dynamic)
+      #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont) schedule(dynamic) 
       for (j = 0; j < tkop[i]; j++)
          for (k = j+1; k < tkop[i]; k++)
          {

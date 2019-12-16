@@ -94,7 +94,7 @@ void main (int argc, char *argv[])
     for (i=0; i<TALDEKOP; i++)
     for (j=0; j<ALDAKOP+1; j++) 
       baturak[i][j] = 0.0;
-    #pragma omp parallel for private(i,j) reduction(+:baturak) 
+    #pragma omp parallel for private(i,j) reduction(+:baturak) schedule(static)
     for (i=0; i<elekop; i++)
     {
       for (j=0; j<ALDAKOP; j++) 
@@ -105,7 +105,7 @@ void main (int argc, char *argv[])
 
     // kalkulatu zentroide berriak eta erabaki bukatu den edo jarraitu behar den, DELTAren arabera
     bukatu = 1;
-    #pragma omp parallel for private(i) shared(baturak)
+    #pragma omp parallel for private(i) shared(baturak) schedule(dynamic)
     for (i=0; i<TALDEKOP; i++) 
     {
       if (baturak[i][ALDAKOP] > 0) // taldea ez dago hutsik
@@ -135,7 +135,7 @@ void main (int argc, char *argv[])
   // elementuen kopurua eta sailkapena
   
   //Hari kopurua gehienez 8   
-  #pragma omp set_threads(8) parallel for private(i,talde) reduction(+:tkop) schedule(static,kelem)
+  #pragma omp set_threads(8) parallel for private(i,taldea) shared(nor) reduction(+:tkop) schedule(static,kelem)
   for (i=0; i<elekop; i++) 
   {
     taldea = popul[i];
@@ -143,10 +143,9 @@ void main (int argc, char *argv[])
     tkop[taldea] ++; 
   }
 
-  // trinkotasuna talde bakoitzean: elementuen arteko distantzien batezbestekoa (OSATZEKO)
+  // trinkotasuna talde bakoitzean: elementuen arteko distantzien batezbestekoa (OSATZEKO
 
   trinkotasuna (tkop, elem, nor, trinko);
-
   // idatzi emaitza batzuk fitxategi batean
   // ========================================
   
