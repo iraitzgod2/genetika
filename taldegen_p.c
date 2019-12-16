@@ -32,8 +32,8 @@ void main (int argc, char *argv[])
   float   diszent;
 
   FILE    *f1, *f2;
-  struct timespec  t1, t2;
-  double  texe;
+  struct timespec  t1, t2,t3,t4,t5,t6;
+  double  texe,texetrinko,texetaldegertu;
   int ktald, kelem, kalda, nth = omp_get_num_threads();
 
   if ((argc < 2)  || (argc > 3)) {
@@ -81,10 +81,13 @@ void main (int argc, char *argv[])
   ktald = TALDEKOP/nth;
   kalda = ALDAKOP/nth;
   kelem = elekop/nth;
+  printf ("\n >> Exekuzioa talde gertuena\n");
   while ((bukatu == 0) && (iterkop < ITMAX))
   {
-    // kalkulatu talde gertuena (OSATZEKO) 
+    // kalkulatu talde gertuena (OSATZEKO)
+    clock_gettime (CLOCK_REALTIME, &t5); 
     talde_gertuena (elekop, elem, zent, popul);
+    clock_gettime (CLOCK_REALTIME, &t6);
 
 
     // kalkulatu talde bakoitzeko zentroide berriak
@@ -124,6 +127,8 @@ void main (int argc, char *argv[])
     }
     iterkop ++;
   } // while
+  texetaldegertu = (t6.tv_sec-t5.tv_sec) + (t6.tv_nsec-t5.tv_nsec)/(double)1e9;
+  printf ("\n >> Tex (talde gertuena): %1.3f s\n\n", texetaldegertu);
 
 
   
@@ -144,9 +149,12 @@ void main (int argc, char *argv[])
   }
 
   // trinkotasuna talde bakoitzean: elementuen arteko distantzien batezbestekoa (OSATZEKO)
-
+  printf ("\n >> Exekuzioa trinkotasuna\n");
+  clock_gettime (CLOCK_REALTIME, &t3);
   trinkotasuna (tkop, elem, nor, trinko);
-
+  clock_gettime (CLOCK_REALTIME, &t4);
+  texetrinko = (t4.tv_sec-t3.tv_sec) + (t4.tv_nsec-t3.tv_nsec)/(double)1e9;
+  printf ("\n >> Tex (trinkotasuna): %1.3f s\n\n", texetrinko);
   // idatzi emaitza batzuk fitxategi batean
   // ========================================
   

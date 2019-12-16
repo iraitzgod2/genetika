@@ -49,18 +49,14 @@ float dis_gen (float *zent, float *elem)
 // popul: elementu bakoitzaren zentroide hurbilena, haren "taldea"
 void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], int *popul)
 {
-   int ele,zen;
+   int zentmin,ele,zen;
    float dis, dismin[elekop];
-   int ktald, kelem, kalda, nth = omp_get_num_threads();
-   ktald = TALDEKOP/nth;
-  kalda = ALDAKOP/nth;
-  kelem = elekop/nth;
-   #pragma omp parallel for private(ele) schedule(static)
+   #pragma omp parallel for private(ele)   
    for (ele = 0; ele < elekop; ele++)
       dismin[ele]=FLT_MAX;
    for (zen = 0; zen < TALDEKOP; zen++)
    {
-      #pragma omp parallel for private(ele,dis) schedule(static) 
+      #pragma omp parallel for private(ele,dis)
       for (ele = 0; ele < elekop; ele++)
       {
          dis = dis_gen(elem[ele], zent[zen]);
@@ -94,7 +90,7 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
    {
       kont = 0;
       batura_dis = 0.0;
-      #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont) schedule(dynamic)
+      #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont) schedule(dynamic) 
       for (j = 0; j < tkop[i]; j++)
          for (k = j+1; k < tkop[i]; k++)
          {
