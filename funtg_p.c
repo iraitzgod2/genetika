@@ -91,27 +91,16 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
 {
    int kont,i,j,k;
    double batura_dis;
-   int a,b;
    for (i = 0; i < TALDEKOP; i++)
    {
-      kont = 0;
       batura_dis = 0.0;
       #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont) schedule(dynamic)  
       for (j = 0; j < tkop[i]; j++)
-      {
          for (k = j+1; k < tkop[i]; k++)
          {
             batura_dis += (double) dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
          }
-         kont += j;
-      }
-      trinko[i] = tkop[i] < 2 ? 0.0 : (float) (batura_dis / kont); 
+      trinko[i] = tkop[i] < 2 ? 0.0 : (float) (batura_dis / (tkop[i]*(tkop[i]-1)/2));
    }
 }
 
-/*
-long faktoriala(int i)
-{
-   return i<2 ? (long)1 :(long) i*faktoriala(i-1);
-}
-*/
