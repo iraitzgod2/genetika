@@ -91,7 +91,7 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
 {
    int kont,i,j,k;
    double batura_dis;
-   long a,b;
+   int a,b;
    for (i = 0; i < TALDEKOP; i++)
    {
       kont = 0;
@@ -109,4 +109,9 @@ void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *tri
    }
 }
 
-
+/*
+long faktoriala(int i)
+{
+   return i<2 ? (long)1 :(long) i*faktoriala(i-1);
+}
+*/

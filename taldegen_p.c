@@ -111,7 +111,7 @@ void main (int argc, char *argv[])
     {
       if (baturak[i][ALDAKOP] > 0) // taldea ez dago hutsik
       { 
-        #pragma omp parallel for private(j) schedule(static,kalda)
+        //#pragma omp parallel for private(j) schedule(static,kalda)
         for (j=0; j<ALDAKOP; j++) zentberri[i][j] = baturak[i][j] / baturak[i][ALDAKOP];    
       
         // erabaki bukatu behar den
@@ -119,7 +119,7 @@ void main (int argc, char *argv[])
         if (diszent > DELTA) bukatu = 0;	// dimentsio batean aldaketa dago; segi smulazioarekin
 
         // kopiatu zentroide berriak
-        #pragma omp parallel for private(j) schedule(static,kalda)
+        //#pragma omp parallel for private(j) schedule(static,kalda)
         for (j=0; j<ALDAKOP; j++) zent[i][j] = zentberri[i][j];    
       }
     }
