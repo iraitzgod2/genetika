@@ -28,7 +28,6 @@ float dis_gen (float *zent, float *elem)
 {
    float dis = 0.0; 
    int i;
-   //#pragma omp for schedule(dynamic)
    for (i = 0; i < ALDAKOP; ++i)
       dis +=(float) pow((double)zent[i]-elem[i], 2.0);
    return sqrt(dis);
@@ -49,18 +48,8 @@ float dis_gen (float *zent, float *elem)
 // popul: elementu bakoitzaren zentroide hurbilena, haren "taldea"
 void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], int *popul)
 {
-   int zentmin,ele,zen;
+   int ele,zen;
    float dis, dismin[elekop];
-   /* 
-   int ktald, kelem, kalda, nth = omp_get_num_threads();
-   ktald = TALDEKOP/nth;
-   kalda = ALDAKOP/nth;
-   kelem = elekop/nth;
-   */
-   /*#pragma omp parallel for private(ele) schedule(static,kelem)
-   for (ele = 0; ele < elekop; ele++)
-     dismin[ele]=FLT_MAX;
-   */
    for (zen = 0; zen < TALDEKOP; zen++)
       #pragma omp parallel for private(ele,dis) schedule(static) 
       for (ele = 0; ele < elekop; ele++)
@@ -89,17 +78,15 @@ void talde_gertuena (int elekop, float elem[][ALDAKOP], float zent[][ALDAKOP], i
 // Kalkulatu taldeen trinkotasuna: kideen arteko distantzien batazbestekoa
 void trinkotasuna (int *tkop, float elem[][ALDAKOP], int nor[][EMAX], float *trinko)
 {
-   int kont,i,j,k;
+   int i,j,k;
    double batura_dis;
    for (i = 0; i < TALDEKOP; i++)
    {
       batura_dis = 0.0;
-      #pragma omp parallel for private(j,k) reduction(+:batura_dis,kont) schedule(dynamic)  
+      #pragma omp parallel for private(j,k) reduction(+:batura_dis) schedule(dynamic)  
       for (j = 0; j < tkop[i]; j++)
          for (k = j+1; k < tkop[i]; k++)
-         {
             batura_dis += (double) dis_gen(elem[nor[i][j]], elem[nor[i][k]]);
-         }
       trinko[i] = tkop[i] < 2 ? 0.0 : (float) (batura_dis / (tkop[i]*(tkop[i]-1)/2));
    }
 }

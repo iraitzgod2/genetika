@@ -1,2 +1,2 @@
 gcc -O2 -o taldegen_s taldegen_s.c funtg_s.c -lm
-./taldegen_s ~/templates/genetika/dbh 1000
+./taldegen_s ~/templates/genetika/dbh 

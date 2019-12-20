@@ -35,12 +35,16 @@ void main (int argc, char *argv[])
   struct timespec  t1, t2,t3,t4,t5,t6;
   double  texe,texe1fasea,texe2fasea;
   int ktald, kelem, kalda, nth = omp_get_num_threads();
+  
+  ktald = TALDEKOP/nth;
+  kalda = ALDAKOP/nth;
+  kelem = elekop/nth;
 
   if ((argc < 2)  || (argc > 3)) {
     printf ("ADI:  progr datu-fitx [elem kop])\n");
     exit (-1);
   }
-
+ 
 
   printf ("\n >> Exekuzioa paraleloan\n");
   clock_gettime (CLOCK_REALTIME, &t1);
@@ -70,6 +74,7 @@ void main (int argc, char *argv[])
   // ===================================
  
   srand (147);
+  //#pragma omp parallel for private(i,j) schedule(static,ktald)
   for (i=0; i<TALDEKOP; i++) 
   for (j=0; j<ALDAKOP; j++)
     zent[i][j] = (rand() % 10000) / 100.0;
@@ -79,9 +84,6 @@ void main (int argc, char *argv[])
   printf ("\n >> Exekuzioa 1.fasean\n");
   clock_gettime (CLOCK_REALTIME, &t5);
   iterkop = 0; bukatu = 0;
-  ktald = TALDEKOP/nth;
-  kalda = ALDAKOP/nth;
-  kelem = elekop/nth;
   while ((bukatu == 0) && (iterkop < ITMAX))
   {
     // kalkulatu talde gertuena (OSATZEKO) 
@@ -91,7 +93,7 @@ void main (int argc, char *argv[])
     // kalkulatu talde bakoitzeko zentroide berriak
     // dimentsio bakoitzaren batazbestea
     // baturak: 100 aldagaien balioak akumulatzeko; azkena kopurua da
-    #pragma omp parallel for private(i,j) shared(baturak) schedule(static,ktald)
+    #pragma omp parallel for private(i,j) schedule(static,ktald)
     for (i=0; i<TALDEKOP; i++)
     for (j=0; j<ALDAKOP+1; j++) 
       baturak[i][j] = 0.0;
@@ -103,15 +105,14 @@ void main (int argc, char *argv[])
       baturak[popul[i]][ALDAKOP] ++;
     }
 
-
     // kalkulatu zentroide berriak eta erabaki bukatu den edo jarraitu behar den, DELTAren arabera
     bukatu = 1;
-    #pragma omp parallel for private(i) shared(baturak) schedule(dynamic)
+    #pragma omp parallel for private(i) shared(baturak,j) schedule(dynamic,ktald)
     for (i=0; i<TALDEKOP; i++) 
     {
       if (baturak[i][ALDAKOP] > 0) // taldea ez dago hutsik
       { 
-        //#pragma omp parallel for private(j) schedule(static,kalda)
+        //#pragma omp for private(j) schedule(static,kalda)
         for (j=0; j<ALDAKOP; j++) zentberri[i][j] = baturak[i][j] / baturak[i][ALDAKOP];    
       
         // erabaki bukatu behar den
@@ -119,7 +120,7 @@ void main (int argc, char *argv[])
         if (diszent > DELTA) bukatu = 0;	// dimentsio batean aldaketa dago; segi smulazioarekin
 
         // kopiatu zentroide berriak
-        //#pragma omp parallel for private(j) schedule(static,kalda)
+        //#pragma omp for private(j) schedule(static,kalda)
         for (j=0; j<ALDAKOP; j++) zent[i][j] = zentberri[i][j];    
       }
     }
@@ -141,7 +142,7 @@ void main (int argc, char *argv[])
   // elementuen kopurua eta sailkapena
   
   //Hari kopurua gehienez 8   
-  #pragma omp set_threads(8) parallel for private(i,taldea) shared(nor) reduction(+:tkop) schedule(static,kelem)
+  #pragma omp set_threads=8 parallel for private(i,taldea) shared(nor) reduction(+:tkop) schedule(static,kelem)
   for (i=0; i<elekop; i++) 
   {
     taldea = popul[i];
